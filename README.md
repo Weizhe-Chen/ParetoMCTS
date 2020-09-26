@@ -6,6 +6,8 @@ Demo for the paper "Chen, Weizhe, and Lantao Liu. "Pareto Monte Carlo Tree Searc
 
 [PDF](http://www.roboticsproceedings.org/rss15/p72.pdf)
 
+[Poster](./media/poster.pdf)
+
 ### BibTeX
 ```
 @inproceedings{Liu-RSS-19, 
