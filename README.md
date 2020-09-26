@@ -9,7 +9,7 @@ Demo for the paper "Chen, Weizhe, and Lantao Liu. "Pareto Monte Carlo Tree Searc
 [Poster](./media/poster.pdf)
 
 ## Requirements
-* Python 3
+* Python 3.6+
 * Numpy
 * Matplotlib
 
