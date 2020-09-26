@@ -8,19 +8,6 @@ Demo for the paper "Chen, Weizhe, and Lantao Liu. "Pareto Monte Carlo Tree Searc
 
 [Poster](./media/poster.pdf)
 
-### BibTeX
-```
-@inproceedings{Liu-RSS-19, 
-    author = {Weizhe Chen and Lantao Liu}, 
-    title = {Pareto Monte Carlo Tree Search for Multi-Objective Informative Planning}, 
-    booktitle = {Proceedings of Robotics: Science and Systems}, 
-    year = {2019}, 
-    address = {FreiburgimBreisgau, Germany}, 
-    month = {June}, 
-    doi = {10.15607/RSS.2019.XV.072} 
-} 
-```
-
 ## Requirements
 * Python 3
 * Numpy
@@ -48,3 +35,20 @@ python -m demo.puct
 ![puct](./media/puct.png)
 Now we provide another reward map where the high-reward area is the upper part.
 This time, we chose to go up at the end to balance the two objectives.
+
+## Citing
+If you find this code useful for your research, please consider citing the following paper:
+```
+@inproceedings{Liu-RSS-19, 
+    author = {Weizhe Chen and Lantao Liu}, 
+    title = {Pareto Monte Carlo Tree Search for Multi-Objective Informative Planning}, 
+    booktitle = {Proceedings of Robotics: Science and Systems}, 
+    year = {2019}, 
+    address = {FreiburgimBreisgau, Germany}, 
+    month = {June}, 
+    doi = {10.15607/RSS.2019.XV.072} 
+} 
+```
+
+## Acknowledgements
+The code snippet for parsing pgm file to numpy array was taken from the selected answer of https://stackoverflow.com/questions/7368739/numpy-and-16-bit-pgm. Thanks, cgohlke.
