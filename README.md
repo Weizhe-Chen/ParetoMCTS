@@ -37,7 +37,7 @@ Now we provide another reward map where the high-reward area is the upper part.
 This time, we chose to go up at the end to balance the two objectives.
 
 ## Citing
-If you find this code useful for your research, please consider citing the following paper:
+If you find the code useful for your research, we appreciate citations to the following paper:
 ```
 @inproceedings{Liu-RSS-19, 
     author = {Weizhe Chen and Lantao Liu}, 
