@@ -36,6 +36,14 @@ python -m demo.puct
 Now we provide another reward map where the high-reward area is the upper part.
 This time, we chose to go up at the end to balance the two objectives.
 
+## Hotspots
+
+```bash
+python -m demo.hotspots
+```
+
+![hotspots](/home/wes/clone/pareto-mcts/media/hotspots.gif)
+
 ## Citing
 If you find the code useful for your research, we appreciate citations to the following paper:
 ```

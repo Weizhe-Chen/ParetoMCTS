@@ -204,9 +204,15 @@ class UCT:
             node = best_child
         return np.vstack(poses)
 
-    def get_tree(self, node, poses=[]):
+    def get_tree_resursive(self, node, poses):
+        poses.append(node.action)
         if node.children:
             for child in node.children:
-                poses.append(child.action)
-                poses = self.get_tree(child, poses)
+                poses = self.get_tree_resursive(child, poses)
         return poses
+
+    def get_tree(self):
+        poses = []
+        for child in self.root.children:
+            poses = self.get_tree_resursive(child, poses)
+        return np.vstack(poses)
