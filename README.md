@@ -42,7 +42,7 @@ This time, we chose to go up at the end to balance the two objectives.
 python -m demo.hotspots
 ```
 
-![hotspots](/home/wes/clone/pareto-mcts/media/hotspots.gif)
+![puct](./media/hotspots.gif)
 
 ## Citing
 If you find the code useful for your research, we appreciate citations to the following paper:
