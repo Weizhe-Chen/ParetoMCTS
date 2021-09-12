@@ -7,7 +7,6 @@ from demo.pgm2numpy import read_pgm
 plt.rcParams["image.origin"] = "lower"
 plt.rcParams["image.cmap"] = "gray_r"
 
-
 # Environment extent
 extent = [0, 100, 0, 100]
 print("Environment extent: ", extent)
@@ -19,9 +18,8 @@ print(f"Robot's pose: [x={pose[0]}, y={pose[1]}, yaw={pose[2]}]")
 # Read occupancy grid map from pgm file.
 occupancy_grid_map = read_pgm("./maps/cave.pgm", byteorder="<")
 # Normalize the occupancy grid map.
-occupancy_grid_map = (
-    occupancy_grid_map - occupancy_grid_map.min()
-) / occupancy_grid_map.max()
+occupancy_grid_map = (occupancy_grid_map -
+                      occupancy_grid_map.min()) / occupancy_grid_map.max()
 # Occupancy grid map is now a boolean matrix with 1 indicating occupied.
 occupancy_grid_map = occupancy_grid_map < 0.9
 assert occupancy_grid_map.dtype == bool
@@ -61,7 +59,7 @@ uct = UCT(
     max_rollout,
 )
 best_action = uct.search(pose, reward_map, occupancy_grid_map)
-poses = np.vstack(uct.get_tree(uct.root))
+poses = np.vstack(uct.get_tree())
 trajectory = uct.get_trajectory()
 
 print("Blue arrows represent the current best action.")

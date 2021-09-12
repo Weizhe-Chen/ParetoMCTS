@@ -7,7 +7,6 @@ from demo.pgm2numpy import read_pgm
 plt.rcParams["image.origin"] = "lower"
 plt.rcParams["image.cmap"] = "gray_r"
 
-
 # Environment extent
 extent = [0, 100, 0, 100]
 print("Environment extent: ", extent)
@@ -19,19 +18,19 @@ print(f"Robot's pose: [x={pose[0]}, y={pose[1]}, yaw={pose[2]}]")
 # Read occupancy grid map from pgm file
 occupancy_grid_map = read_pgm("./maps/cave.pgm", byteorder="<")
 # Normalize the occupancy grid map.
-occupancy_grid_map = (
-    occupancy_grid_map - occupancy_grid_map.min()
-) / occupancy_grid_map.max()
+occupancy_grid_map = (occupancy_grid_map -
+                      occupancy_grid_map.min()) / occupancy_grid_map.max()
 # Occupancy grid map is now a boolean matrix with 1 indicating occupied.
 occupancy_grid_map = occupancy_grid_map < 0.9
 assert occupancy_grid_map.dtype == bool
 
 # Create an artificial reward map
-reward_map = np.empty((occupancy_grid_map.shape[0], occupancy_grid_map.shape[1], 2))
+reward_map = np.empty(
+    (occupancy_grid_map.shape[0], occupancy_grid_map.shape[1], 2))
 for i in range(reward_map.shape[0]):
     for j in range(reward_map.shape[1]):
         reward_map[i, j, 0] = i * j
-        reward_map[i, j, 1] = i ** 2
+        reward_map[i, j, 1] = i**2
 reward_map = (reward_map - reward_map.min()) / reward_map.max()
 reward_map = reward_map.astype(np.float32)
 
@@ -40,7 +39,9 @@ print("Shape of reward map: ", reward_map.shape)
 print("Data type of occupancy grid map: ", occupancy_grid_map.dtype)
 print("Data type of reward map: ", reward_map.dtype)
 print("We used an artificial reward map for a demonstration purpose.")
-print("For the first reward map, the highest reward is in the upper right corner.")
+print(
+    "For the first reward map, the highest reward is in the upper right corner."
+)
 print("For the second reward map, the highest reward is in the upper part.")
 
 # Planning
@@ -62,7 +63,7 @@ puct = ParetoUCT(
     max_rollout,
 )
 best_action = puct.search(pose, reward_map, occupancy_grid_map)
-poses = np.vstack(puct.get_tree(puct.root))
+poses = np.vstack(puct.get_tree())
 trajectory = puct.get_trajectory()
 
 print("Blue arrows represent the current best action.")
