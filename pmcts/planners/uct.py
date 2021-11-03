@@ -9,7 +9,12 @@ from ..utilities.indexing import xy_to_ij
 
 
 class Node:
-    def __init__(self, pose, num_actions, reward=0.0, action=None, parent=None):
+    def __init__(self,
+                 pose,
+                 num_actions,
+                 reward=0.0,
+                 action=None,
+                 parent=None):
         self.pose = pose
         self.unvisited_actions = list(range(num_actions))
         self.reward = reward
@@ -41,7 +46,8 @@ class UCT:
         self.weight = weight
         self.max_iter = max_iter
         self.max_rollout = max_rollout
-        self.actor = DiscreteActions(angle_range, num_actions, duration, velocity)
+        self.actor = DiscreteActions(angle_range, num_actions, duration,
+                                     velocity)
         self.reward = None
         self.occupancy = None
         self.max_row = None
@@ -73,7 +79,7 @@ class UCT:
             # Simulation / rollout
             if new_node is None:
                 # No valid action available.
-                reward = -1.0
+                reward = 0.0
             else:
                 reward = self.rollout(new_node)
 
@@ -104,8 +110,8 @@ class UCT:
             # according to the maximum exploitation score.
             explore_weight = np.max(exploitation_scores) * self.weight
             upper_confidence_bounds = [
-                exploit + explore_weight * explore
-                for exploit, explore in zip(exploitation_scores, exploration_scores)
+                exploit + explore_weight * explore for exploit, explore in zip(
+                    exploitation_scores, exploration_scores)
             ]
             index = np.argmax(upper_confidence_bounds)
             selected_node, has_valid_child = self.select(node.children[index])
@@ -178,8 +184,7 @@ class UCT:
             raise ValueError(
                 "No valid action in current pose!\n"
                 "You might need to implement some 'turn around' engineering "
-                "tricks to solve this problem."
-            )
+                "tricks to solve this problem.")
         num_visits = [child.num_visits for child in node.children]
         # print(sorted(num_visits))
         idx = np.argmax(num_visits)
@@ -192,8 +197,7 @@ class UCT:
             raise ValueError(
                 "No valid action in current pose!\n"
                 "You might need to implement some 'turn around' engineering "
-                "tricks to solve this problem."
-            )
+                "tricks to solve this problem.")
         poses = []
         node = copy(self.root)
         while node.children:

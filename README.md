@@ -8,17 +8,19 @@ Demo for the paper "Chen, Weizhe, and Lantao Liu. "Pareto Monte Carlo Tree Searc
 
 [Poster](./media/poster.pdf)
 
-## Requirements
+## Installation
 * Python 3.6+
 * Numpy
 * Matplotlib
+```bash
+pip install numpy matplotlib
+pip install -e .
+```
 
 ## Upper Confidence Bound Applied to Trees (UCT)
 ```bash
-# Stay in /pareto-mcts and execute
-python -m demo.uct
-# or
-./scripts/run_uct.sh
+cd ./demo
+python uct_demo.py
 ```
 ![uct](./media/uct.png)
 The black blocks in the occupancy grid map are obstacles.
@@ -27,10 +29,7 @@ The blue arrows indicate the current best action, the red arrows represent the b
 
 ## Pareto UCT
 ```bash
-# Stay in /pareto-mcts and execute
-python -m demo.puct
-# or
-./scripts/run_puct.sh
+python puct_demo.py
 ```
 ![puct](./media/puct.png)
 Now we provide another reward map where the high-reward area is the upper part.
@@ -39,7 +38,7 @@ This time, we chose to go up at the end to balance the two objectives.
 ## Hotspots
 
 ```bash
-python -m demo.hotspots
+python hotspots.py
 ```
 
 ![puct](./media/hotspots.gif)
