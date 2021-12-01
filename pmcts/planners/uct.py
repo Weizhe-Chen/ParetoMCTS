@@ -89,6 +89,10 @@ class UCT:
             else:
                 self.backpropagation(new_node, reward)
 
+        if not self.root.children:
+            pose[2] += np.pi / 8
+            return self.search(pose, reward_map, occupancy_map)
+
         return self.best_action(self.root)
 
     def select(self, node):
