@@ -79,7 +79,7 @@ class UCT:
             # Simulation / rollout
             if new_node is None:
                 # No valid action available.
-                reward = 0.0
+                reward = -1.0  # Discourage searching towards obstacles
             else:
                 reward = self.rollout(new_node)
 
