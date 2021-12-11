@@ -38,6 +38,7 @@ class UCT:
         weight,
         max_iter,
         max_rollout,
+        obstacle_penelty=-1.0,
     ):
         self.extent = extent
         self.num_actions = num_actions
@@ -46,13 +47,14 @@ class UCT:
         self.weight = weight
         self.max_iter = max_iter
         self.max_rollout = max_rollout
-        self.actor = DiscreteActions(angle_range, num_actions, duration,
-                                     velocity)
-        self.reward = None
-        self.occupancy = None
-        self.max_row = None
-        self.max_col = None
-        self.root = None
+        self.actor = DiscreteActions(
+            angle_range,
+            num_actions,
+            duration,
+            velocity,
+        )
+        self.eps = 1e-6
+        self.obstacle_penelty = obstacle_penelty
 
     def search(self, pose, reward_map, occupancy_map):
         # Save reward map and occupancy map
@@ -70,29 +72,23 @@ class UCT:
             expandable_node, has_valid_child = self.select(self.root)
             # This branch is blocked by obstacles.
             if not has_valid_child:
-                self.backpropagation(expandable_node, reward=-1.0)
-                break
-
+                continue
             # Expansion
             new_node = self.expand(expandable_node)
-
-            # Simulation / rollout
-            if new_node is None:
-                # No valid action available.
-                reward = -1.0  # Discourage searching towards obstacles
-            else:
-                reward = self.rollout(new_node)
-
-            # Backpropagation
-            if new_node is None:
+            # Simulation / rollout and backpropagation
+            if new_node is None:  # No valid action available.
+                reward = self.obstacle_penelty  # Discourage searching towards obstacles
                 self.backpropagation(expandable_node, reward)
             else:
+                reward = self.rollout(new_node)
                 self.backpropagation(new_node, reward)
 
         if not self.root.children:
+            x, y, o = pose
+            print(f"No valid action at [{x: .1f} {y: .1f} {o: .1f}]")
             pose[2] += np.pi / 8
+            print(f"Turn to [{pose[0]: .1f} {pose[1]: .1f} {pose[2]: .1f}]")
             return self.search(pose, reward_map, occupancy_map)
-
         return self.best_action(self.root)
 
     def select(self, node):
@@ -110,14 +106,15 @@ class UCT:
                 np.sqrt(2.0 * np.log(node.num_visits) / child.num_visits)
                 for child in node.children
             ]
-            # Note that we rescaled the exploration weight
-            # according to the maximum exploitation score.
-            explore_weight = np.max(exploitation_scores) * self.weight
-            upper_confidence_bounds = [
+            # Note that we rescaled the exploration weight according to
+            # the maximum exploitation score.
+            exploitation_scale = (np.max(exploitation_scores) + self.eps)
+            explore_weight = exploitation_scale * self.weight
+            ucb = [
                 exploit + explore_weight * explore for exploit, explore in zip(
                     exploitation_scores, exploration_scores)
             ]
-            index = np.argmax(upper_confidence_bounds)
+            index = np.argmax(ucb)
             selected_node, has_valid_child = self.select(node.children[index])
             return selected_node, has_valid_child
 
@@ -189,13 +186,19 @@ class UCT:
                 "No valid action in current pose!\n"
                 "You might need to implement some 'turn around' engineering "
                 "tricks to solve this problem.")
-        num_visits = [child.num_visits for child in node.children]
-        # print(sorted(num_visits))
-        idx = np.argmax(num_visits)
-        best_child = node.children[idx]
+
+        ## Uncomment this block to use num_visits instead of expected reward
+        #  num_visits = [child.num_visits for child in node.children]
+        #  idx = np.argmax(num_visits)
+        #  best_child = node.children[idx]
+        #  print("Number of visits: ", num_visits)
+
+        values = [child.reward / child.num_visits for child in node.children]
+        index = np.argmax(values)
+        best_child = node.children[index]
         return best_child.action
 
-    def get_trajectory(self):
+    def get_trajectory(self, max_depth=None):
         assert len(self.root.unvisited_actions) == 0
         if not self.root.children:
             raise ValueError(
@@ -204,12 +207,18 @@ class UCT:
                 "tricks to solve this problem.")
         poses = []
         node = copy(self.root)
+        depth = 0
         while node.children:
-            num_visits = [child.num_visits for child in node.children]
-            idx = np.argmax(num_visits)
+            values = [
+                child.reward / child.num_visits for child in node.children
+            ]
+            idx = np.argmax(values)
             best_child = node.children[idx]
             poses.append(best_child.action)
             node = best_child
+            depth += 1
+            if max_depth is not None and depth == max_depth:
+                break
         return np.vstack(poses)
 
     def get_tree_resursive(self, node, poses):
