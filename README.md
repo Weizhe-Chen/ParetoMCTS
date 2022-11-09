@@ -46,14 +46,11 @@ python hotspots.py
 ## Citing
 If you find the code useful for your research, we appreciate citations to the following paper:
 ```
-@inproceedings{Liu-RSS-19, 
+@inproceedings{chen19pareto, 
     author = {Weizhe Chen and Lantao Liu}, 
     title = {Pareto Monte Carlo Tree Search for Multi-Objective Informative Planning}, 
     booktitle = {Proceedings of Robotics: Science and Systems}, 
     year = {2019}, 
-    address = {FreiburgimBreisgau, Germany}, 
-    month = {June}, 
-    doi = {10.15607/RSS.2019.XV.072} 
 } 
 ```
 
